@@ -26,7 +26,7 @@ repo_restore()
     git pull;
     git merge master origin/master;
     read -sp "Enter password: " pass;
-    gpg --yes --no-tty --batch --passphrase-fd 3 --decrypt -o $1.tgz $1.tgz.gpg 3<<<$pass 2&>/dev/null;
+    gpg --yes --no-tty --batch --passphrase-fd 3 --decrypt -o $1.tgz $1.tgz.gpg 3<<<$pass;
     tar zxf $1.tgz 2&>/dev/null;
     rm $1.tgz 2&>/dev/null;
 }

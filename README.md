@@ -10,7 +10,7 @@ repo_save()
         cd $1;
         tar --exclude=".git*" --exclude="*.tgz" -zcf $2.tgz $1 2&>/dev/null;
         read -sp "Enter password: " pass;
-        gpg --yes --no-tty --batch --passphrase-fd 3 --symmetric -o $2.tgz.gpg $2.tgz 3<<<$pass;
+        gpg --yes --no-tty --batch --passphrase-fd 3 --symmetric -o $2.tgz.gpg $2.tgz 3;
         git add $2.tgz.gpg README.md;
         git commit -m "`date`";
         git push;
@@ -34,7 +34,7 @@ repo_restore()
     git pull;
     git merge master origin/master;
     read -sp "Enter password: " pass;
-    gpg --yes --no-tty --batch --passphrase-fd 3 --decrypt -o $1.tgz $1.tgz.gpg 3<<<$pass 2&>/dev/null;
+    gpg --yes --no-tty --batch --passphrase-fd 3 --decrypt -o $1.tgz $1.tgz.gpg 3<<<$pass;
     tar zxf $1.tgz 2&>/dev/null;
     rm $1.tgz 2&>/dev/null;
 }
