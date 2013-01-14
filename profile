@@ -12,7 +12,7 @@ repo_save()
 	cd $1;
         tar --exclude=".git*" --exclude="*.tgz" -zcf $2.tgz $1 2&>/dev/null;
 	read -sp "Enter password: " pass;
-        gpg --yes --no-tty --batch --passphrase-fd 3 --symmetric -o $2.tgz.gpg $2.tgz 3<<<$pass 2&>/dev/null;
+        gpg --yes --no-tty --batch --passphrase-fd 3 --symmetric -o $2.tgz.gpg $2.tgz 3<<<$pass;
         git add $2.tgz.gpg README.md .bashrc;
         git commit -m "`date`";
         git push;
