@@ -6,12 +6,16 @@ Here is a small bit to help you create a private repo. Open up your .bashrc or a
 ```sh
 repo_save()
 {
-    tar --exclude=".git*" --exclude="*.tgz" -zcf $2.tgz $1;
-    gpg --symmetric -o $2.tgz.gpg $2.tgz;
-    git add $2.tgz.gpg;
-    git commit -m "`date`";
-    git push;
-    rm $2.tgz;
+    if [ -d "$1" ] ; then
+        cd $1;
+        tar --exclude=".git*" --exclude="*.tgz" -zcf $2.tgz $1 2&>/dev/null;
+        read -sp "Enter password: " pass;
+        gpg --yes --no-tty --batch --passphrase-fd 3 --symmetric -o $2.tgz.gpg $2.tgz 3<<<$pass 2&>/dev/null;
+        git add $2.tgz.gpg README.md;
+        git commit -m "`date`";
+        git push;
+        rm $2.tgz 2&>/dev/null;
+    fi
 }
 alias repo-save=repo_save;
 ```
@@ -29,9 +33,10 @@ repo_restore()
 {
     git pull;
     git merge master origin/master;
-    gpg --decrypt -o $1.tgz $1.tgz.gpg;
-    tar zxf $1.tgz;
-    rm $1.tgz;
+    read -sp "Enter password: " pass;
+    gpg --yes --no-tty --batch --passphrase-fd 3 --decrypt -o $1.tgz $1.tgz.gpg 3<<<$pass 2&>/dev/null;
+    tar zxf $1.tgz 2&>/dev/null;
+    rm $1.tgz 2&>/dev/null;
 }
 alias repo-restore=repo_restore;
 ```
